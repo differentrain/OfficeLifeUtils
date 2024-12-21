@@ -26,19 +26,21 @@ namespace TestSaveFolder
                    "",
                    "游戏最新的正式版本号");
 
+
+            string gameVersion = MySingleton<UpdateMessageImpl>.Instance.GetNewVersionName();
             if (string.IsNullOrWhiteSpace(config.Value))
             {
-                Logger.LogInfo($"{MyPluginInfo.PLUGIN_GUID}: Need Config Game Version. Current Game Version [{config.Value}]");
+                Logger.LogInfo($"{MyPluginInfo.PLUGIN_GUID}: Need Config Game Version. Current Game Version [{gameVersion}]");
 
             }
-            else if (MySingleton<UpdateMessageImpl>.Instance.GetNewVersionName().Contains(config.Value))
+            else if (gameVersion.Contains(config.Value))
             {
-                Logger.LogInfo($"{MyPluginInfo.PLUGIN_GUID}: Not Patched. Current Game Version [{config.Value}], Last Release Version [{config.Value}]");
+                Logger.LogInfo($"{MyPluginInfo.PLUGIN_GUID}: Not Patched. Current Game Version [{gameVersion}], Last Release Version [{config.Value}]");
             }
             else
             {
                 Harmony.CreateAndPatchAll(typeof(Plugin));
-                Logger.LogInfo($"{MyPluginInfo.PLUGIN_GUID}: Patched. Current Game Version [{config.Value}], Last Release Version [{config.Value}]");
+                Logger.LogInfo($"{MyPluginInfo.PLUGIN_GUID}: Patched. Current Game Version [{gameVersion}], Last Release Version [{config.Value}]");
             }
         }
 
