@@ -30,6 +30,9 @@
     <Reference Include="Assembly-CSharp">
       <HintPath>libs\Assembly-CSharp.dll</HintPath>
     </Reference>
+    <Reference Include="BFCore">
+      <HintPath>libs\BFCore.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>libs\UnityEngine.CoreModule.dll</HintPath>
     </Reference>

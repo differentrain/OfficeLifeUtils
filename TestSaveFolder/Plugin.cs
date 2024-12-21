@@ -3,9 +3,11 @@ using BepInEx.Configuration;
 
 using HarmonyLib;
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection.Emit;
+using System.Security.Cryptography;
 
 using UnityEngine;
 
@@ -25,22 +27,20 @@ namespace TestSaveFolder
                    "Last_Release",
                    "",
                    "游戏最新的正式版本号");
-
-
-            string gameVersion = MySingleton<UpdateMessageImpl>.Instance.GetNewVersionName();
+            string gameVersion = GetGameVersion();
             if (string.IsNullOrWhiteSpace(config.Value))
             {
-                Logger.LogInfo($"{MyPluginInfo.PLUGIN_GUID}: Need Config Game Version. Current Game Version [{gameVersion}]");
+                Logger.LogInfo($"{MyPluginInfo.PLUGIN_GUID}: Need Config Game Version. Current[{gameVersion}]");
 
             }
             else if (gameVersion.Contains(config.Value))
             {
-                Logger.LogInfo($"{MyPluginInfo.PLUGIN_GUID}: Not Patched. Current Game Version [{gameVersion}], Last Release Version [{config.Value}]");
+                Logger.LogInfo($"{MyPluginInfo.PLUGIN_GUID}: Not Patched. Current[{gameVersion}], Release[{config.Value}]");
             }
             else
             {
                 Harmony.CreateAndPatchAll(typeof(Plugin));
-                Logger.LogInfo($"{MyPluginInfo.PLUGIN_GUID}: Patched. Current Game Version [{gameVersion}], Last Release Version [{config.Value}]");
+                Logger.LogInfo($"{MyPluginInfo.PLUGIN_GUID}: Patched. Current[{gameVersion}], Release[{config.Value}]");
             }
         }
 
@@ -80,6 +80,27 @@ namespace TestSaveFolder
             {
                 CopyDirectory(dir, dest.CreateSubdirectory(dir.Name));
             }
+        }
+
+        private  string GetGameVersion()
+        {
+            Singleton<ResManager>.Instance.Init();
+            DataSys.SteamUpdateTitles = Singleton<ResManager>.Instance.LoadConfig<List<TbUpdateCfg>, XmlConfiger>(Singleton<ResManager>.Instance.LoadResource<TextAsset>(SysDefine.fillPath + SysDefine.UPDATELITLE_STEAM_PATH), ResType.Resources);
+            if (DataSys.SteamUpdateTitles.IsNull<List<TbUpdateCfg>>() && Application.platform != RuntimePlatform.Android && Application.platform != RuntimePlatform.IPhonePlayer)
+            {
+                DataSys.SteamUpdateTitles = Singleton<ResManager>.Instance.LoadConfig<List<TbUpdateCfg>, XmlConfiger>(Application.streamingAssetsPath + SysDefine.fillPath + SysDefine.UPDATELITLE_STEAM_PATH, ResType.File);
+            }
+            DataSys.SteamUpdateMessages = Singleton<ResManager>.Instance.LoadConfig<List<TbUpMessageCfg>, XmlConfiger>(Singleton<ResManager>.Instance.LoadResource<TextAsset>(SysDefine.fillPath + SysDefine.UPDATEMESSAGE_STEAM_PATH), ResType.Resources);
+            if (DataSys.SteamUpdateMessages.IsNull<List<TbUpMessageCfg>>() && Application.platform != RuntimePlatform.Android && Application.platform != RuntimePlatform.IPhonePlayer)
+            {
+                DataSys.SteamUpdateMessages = Singleton<ResManager>.Instance.LoadConfig<List<TbUpMessageCfg>, XmlConfiger>(Application.streamingAssetsPath + SysDefine.fillPath + SysDefine.UPDATEMESSAGE_STEAM_PATH, ResType.File);
+            }
+            DataSys.WegameUpdateTitles = Singleton<ResManager>.Instance.LoadConfig<List<TbUpdateCfg>, XmlConfiger>(Singleton<ResManager>.Instance.LoadResource<TextAsset>(SysDefine.fillPath + SysDefine.UPDATELITLE_WEGAME_PATH), ResType.Resources);
+            if (DataSys.WegameUpdateTitles.IsNull<List<TbUpdateCfg>>() && Application.platform != RuntimePlatform.Android && Application.platform != RuntimePlatform.IPhonePlayer)
+            {
+                DataSys.WegameUpdateTitles = Singleton<ResManager>.Instance.LoadConfig<List<TbUpdateCfg>, XmlConfiger>(Application.streamingAssetsPath + SysDefine.fillPath + SysDefine.UPDATELITLE_WEGAME_PATH, ResType.File);
+            }
+           return MySingleton<UpdateMessageImpl>.Instance.GetNewVersionName();
         }
     }
 
