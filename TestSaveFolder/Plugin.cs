@@ -1,14 +1,9 @@
 ﻿using BepInEx;
 using BepInEx.Configuration;
-
 using HarmonyLib;
-
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection.Emit;
-using System.Security.Cryptography;
-
 using UnityEngine;
 
 namespace TestSaveFolder

@@ -33,8 +33,5 @@
     <Reference Include="BFCore">
       <HintPath>libs\BFCore.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.CoreModule">
-      <HintPath>libs\UnityEngine.CoreModule.dll</HintPath>
-    </Reference>
   </ItemGroup>
 </Project>

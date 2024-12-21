@@ -30,8 +30,5 @@
     <Reference Include="Assembly-CSharp">
       <HintPath>libs\Assembly-CSharp.dll</HintPath>
     </Reference>
-    <Reference Include="BFCore">
-      <HintPath>..\TestSaveFolder\libs\BFCore.dll</HintPath>
-    </Reference>
   </ItemGroup>
 </Project>
